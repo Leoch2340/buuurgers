@@ -42,7 +42,7 @@ export const App = () => {
   const isModalOpened = useSelector(selectIsModalOpened);
   const navigate = useNavigate();
 
-  // Инициализация приложения: проверка аутентификации и загрузка данных
+  // Инициализация приложения: проверка аутентификации и данных
   useEffect(() => {
     if (!isAuthenticated && token) {
       dispatch(getUserThunk())
