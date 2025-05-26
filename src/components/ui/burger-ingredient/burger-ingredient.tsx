@@ -14,36 +14,32 @@ import { useDispatch } from '../../../services/store';
 
 export const BurgerIngredientUI: FC<TBurgerIngredientUIProps> = memo(
   ({ ingredient, count, handleAdd, locationState, index }) => {
-    const { image, price, name, _id } = ingredient;
     const dispatch = useDispatch();
+    const { image, price, name, _id, type } = ingredient;
 
-    const onClick = () => {
-      dispatch(openModal());
-    };
+    const handleOpenModal = () => dispatch(openModal());
 
     return (
       <li
         className={styles.container}
-        data-cy={
-          ingredient.type === 'bun' ? `bun_${index}` : `ingredient_${index}`
-        }
+        data-cy={type === 'bun' ? `bun_${index}` : `ingredient_${index}`}
       >
         <Link
-          className={styles.article}
           to={`/ingredients/${_id}`}
           state={locationState}
-          onClick={onClick}
-          data-cy={'ingredient'}
+          className={styles.article}
+          onClick={handleOpenModal}
+          data-cy='ingredient'
         >
-          {count && <Counter count={count} />}
-          <img className={styles.img} src={image} alt='картинка ингредиента.' />
+          {!!count && <Counter count={count} />}
+          <img src={image} alt='картинка ингредиента.' className={styles.img} />
           <div className={`${styles.cost} mt-2 mb-2`}>
             <p className='text text_type_digits-default mr-2'>{price}</p>
             <CurrencyIcon type='primary' />
           </div>
           <p
             className={`text text_type_main-default ${styles.text}`}
-            data-cy={'ingredient_name'}
+            data-cy='ingredient_name'
           >
             {name}
           </p>

@@ -9,15 +9,15 @@ import {
 } from '@zlden/react-developer-burger-ui-components';
 import { Link } from 'react-router-dom';
 
+// Компонент верхнего меню приложения, отображающий навигацию и имя пользователя
 export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => (
-  // const location = useLocation();
-
   <header className={styles.header}>
     <nav className={`${styles.menu} p-4`}>
+      {/* Левая часть меню: навигация "Конструктор" и "Лента заказов" */}
       <div className={styles.menu_part_left}>
-        {/* Блок с иконкой бургера и текстом "Конструктор" */}
+        {/* Ссылка на главную страницу с иконкой бургера */}
         <>
-          <BurgerIcon type={'primary'} />
+          <BurgerIcon type='primary' />
           <Link
             to='/'
             className={
@@ -29,9 +29,10 @@ export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => (
             </p>
           </Link>
         </>
-        {/* Блок с иконкой списка и текстом "Лента заказов" */}
+
+        {/* Ссылка на страницу ленты заказов с иконкой списка */}
         <>
-          <ListIcon type={'primary'} />
+          <ListIcon type='primary' />
           <Link
             to='/feed'
             className={
@@ -44,13 +45,15 @@ export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => (
           </Link>
         </>
       </div>
-      {/* Центральная часть меню с логотипом */}
+
+      {/* Центральная часть меню с логотипом приложения */}
       <div className={styles.logo}>
-        <Logo className='' />
+        <Logo className='' /> {/* Компонент логотипа */}
       </div>
-      {/* Правая часть меню с иконкой профиля и именем пользователя */}
+
+      {/* Правая часть меню: переход в профиль пользователя */}
       <div className={styles.link_position_last}>
-        <ProfileIcon type={'primary'} /> {/* Иконка профиля */}
+        <ProfileIcon type='primary' /> {/* Иконка профиля пользователя */}
         <Link
           to='/profile'
           className={
