@@ -13,34 +13,36 @@ import { Preloader } from '../../components/ui/preloader';
 
 export const Register: FC = () => {
   const dispatch = useDispatch();
-  const [userName, setUserName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
 
-  const isLoading = useSelector(selectLoading);
+  const [userName, setUserName] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+
   const error = useSelector(selectErrorText);
+  const isLoading = useSelector(selectLoading);
 
   useEffect(() => {
     dispatch(removeErrorText());
-  }, []);
+  }, [dispatch]);
 
-  const handleSubmit = (e: SyntheticEvent) => {
-    e.preventDefault();
-    dispatch(
-      fetchRegisterUser({
-        name: userName,
-        password: password,
-        email: email
-      })
-    )
+  const handleSubmit = (event: SyntheticEvent) => {
+    event.preventDefault();
+
+    const registrationData = {
+      name: userName,
+      email,
+      password
+    };
+
+    dispatch(fetchRegisterUser(registrationData))
       .unwrap()
-      .then((payload) => {
-        localStorage.setItem('refreshToken', payload.refreshToken);
-        setCookie('accessToken', payload.accessToken);
-        dispatch(getUserThunk()); // Запрашиваем данные пользователя
+      .then(({ refreshToken, accessToken }) => {
+        localStorage.setItem('refreshToken', refreshToken);
+        setCookie('accessToken', accessToken);
+        dispatch(getUserThunk());
       })
-      .catch((error) => {
-        console.error('Ошибка при авторизации:', error);
+      .catch((err) => {
+        console.error('Ошибка при авторизации:', err);
       });
   };
 

@@ -1,77 +1,93 @@
+// Импортируем UI-компонент для отображения профиля
 import { ProfileUI } from '@ui-pages';
+
+// Импортируем необходимые хуки и типы из React
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
+
+// Импортируем useDispatch и useSelector из нашего Redux store
 import { useDispatch, useSelector } from '../../services/store';
+
+// Импортируем действия и селекторы из слайса
 import {
-  fetchUpdateUser,
-  selectLoading,
-  selectUser
+  fetchUpdateUser, // асинхронный action для обновления данных пользователя
+  selectLoading, // селектор состояния загрузки
+  selectUser // селектор текущего пользователя
 } from '../../slices/stellar-burger-slice';
+
+// Импортируем компонент прелоадера, отображаемый при загрузке
 import { Preloader } from '../../components/ui/preloader';
 
+// Компонент отвечает за отображение и редактирование профиля пользователя
 export const Profile: FC = () => {
   const dispatch = useDispatch();
-  /** TODO: взять переменную из стора */
+
+  // Получаем данные пользователя из хранилища
   const user = useSelector(selectUser);
+
+  // Получаем флаг загрузки, чтобы отображать спиннер при обновлении
   const isLoading = useSelector(selectLoading);
+
+  // Локальное состояние формы редактирования профиля
   const [formValue, setFormValue] = useState({
-    name: user.name,
-    email: user.email,
-    password: ''
+    name: user.name, // текущее имя пользователя
+    email: user.email, // текущий email пользователя
+    password: '' // поле для нового пароля (всегда начинается пустым)
   });
 
-  // Используем хук useEffect для синхронизации формы с данными пользователя
+  // Синхронизируем состояние формы с обновлёнными данными пользователя из стора
   useEffect(() => {
-    // Обновляем состояние формы, если данные пользователя изменились
     setFormValue((prevState) => ({
-      ...prevState, // Сохраняем предыдущие значения формы
-      name: user?.name || '', // Обновляем имя, если оно есть
-      email: user?.email || '' // Обновляем email, если он есть
+      ...prevState, // сохраняем текущие значения (например, пароль)
+      name: user?.name || '', // обновляем имя из store или ставим пустую строку
+      email: user?.email || '' // обновляем email или ставим пустую строку
     }));
-  }, [user]); // Зависимость: эффект срабатывает при изменении user
+  }, [user]); // Эффект срабатывает при изменении объекта user
 
-  // Проверяем, были ли изменены данные формы по сравнению с исходными данными пользователя
+  // Вычисляем, были ли внесены изменения в форму
   const isFormChanged =
-    formValue.name !== user?.name || // Имя изменилось
-    formValue.email !== user?.email || // Email изменился
-    !!formValue.password; // Пароль был введен
+    formValue.name !== user?.name || // имя было изменено
+    formValue.email !== user?.email || // email был изменён
+    !!formValue.password; // введён новый пароль (не пустой)
 
-  // Обработчик отправки формы
+  // Обработка отправки формы редактирования
   const handleSubmit = (e: SyntheticEvent) => {
-    e.preventDefault();
-    dispatch(fetchUpdateUser(formValue));
+    e.preventDefault(); // предотвращаем перезагрузку страницы
+    dispatch(fetchUpdateUser(formValue)); // отправляем новые данные пользователя в API
   };
 
-  // Обработчик отмены изменений
+  // Обработка отмены изменений формы
   const handleCancel = (e: SyntheticEvent) => {
     e.preventDefault();
-    // Сбрасываем форму к исходным данным пользователя
+    // Возвращаем значения формы к текущим данным пользователя (сброс)
     setFormValue({
       name: user.name,
       email: user.email,
-      password: ''
+      password: '' // очищаем поле пароля
     });
   };
 
-  // Обработчик изменения значений в полях ввода
+  // Обработка изменения любого поля формы
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Обновляем состояние формы при изменении значений полей
+    const { name, value } = e.target;
     setFormValue((prevState) => ({
-      ...prevState, // Сохраняем предыдущие значения
-      [e.target.name]: e.target.value // Обновляем значение поля по его имени
+      ...prevState, // сохраняем остальные поля формы
+      [name]: value // обновляем изменённое поле по имени
     }));
   };
 
+  // Показываем прелоадер, если данные пользователя загружаются
   if (isLoading) {
     return <Preloader />;
   }
 
+  // Рендерим UI-компонент формы профиля с передачей всех обработчиков и данных
   return (
     <ProfileUI
-      formValue={formValue} // Текущие значения формы
-      isFormChanged={isFormChanged} // Флаг, указывающий, были ли изменены данные
-      handleCancel={handleCancel} // Функция для отмены изменений
-      handleSubmit={handleSubmit} // Функция для отправки формы
-      handleInputChange={handleInputChange} // Функция для обработки изменений в полях ввода
+      formValue={formValue} // текущие значения формы
+      isFormChanged={isFormChanged} // флаг наличия изменений
+      handleCancel={handleCancel} // отмена изменений
+      handleSubmit={handleSubmit} // отправка формы
+      handleInputChange={handleInputChange} // обновление полей ввода
     />
   );
 };

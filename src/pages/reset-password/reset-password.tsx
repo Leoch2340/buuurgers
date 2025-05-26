@@ -2,31 +2,32 @@ import { FC, SyntheticEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { resetPasswordApi } from '@api'; // API-функция для сброса пароля
-import { ResetPasswordUI } from '@ui-pages'; // UI-компонент для отображения формы сброса
+import { ResetPasswordUI } from '@ui-pages'; // UI-компонент формы сброса пароля
 
 export const ResetPassword: FC = () => {
   const navigate = useNavigate();
+
   const [password, setPassword] = useState('');
   const [token, setToken] = useState('');
   const [error, setError] = useState<Error | null>(null);
 
-  const handleSubmit = (e: SyntheticEvent) => {
-    e.preventDefault();
-    setError(null); // Сбрасываем ошибку перед выполнением запроса
-    // Вызываем API-функцию для сброса пароля
+  const handleSubmit = (event: SyntheticEvent) => {
+    event.preventDefault();
+    setError(null); // Обнуляем ошибку перед вызовом API
+
     resetPasswordApi({ password, token })
       .then(() => {
-        localStorage.removeItem('resetPassword'); // Если запрос успешен, удаляем флаг сброса пароля из localStorage
-        navigate('/login'); // Перенаправляем пользователя на страницу входа
+        localStorage.removeItem('resetPassword');
+        navigate('/login');
       })
-      .catch((err) => setError(err)); // Если произошла ошибка, сохраняем её в состоянии
+      .catch((err: Error) => {
+        setError(err);
+      });
   };
 
-  // Используем хук useEffect для проверки доступа к странице
   useEffect(() => {
-    // Проверяем, есть ли в localStorage флаг сброса пароля
-    if (!localStorage.getItem('resetPassword')) {
-      // Если флага нет, перенаправляем пользователя на страницу восстановления пароля
+    const resetFlag = localStorage.getItem('resetPassword');
+    if (!resetFlag) {
       navigate('/forgot-password', { replace: true });
     }
   }, [navigate]);

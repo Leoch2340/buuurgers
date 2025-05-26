@@ -1,36 +1,36 @@
-import { Preloader } from '@ui';
-import { FeedUI } from '@ui-pages'; //UI-компонент, который отображает ленту заказов.
-import { TOrder } from '@utils-types';
 import { FC, useEffect } from 'react';
 import { useDispatch, useSelector } from '../../services/store';
+import { Preloader } from '@ui';
+import { FeedUI } from '@ui-pages'; // UI-компонент, который отображает ленту заказов.
 import {
   fetchFeed,
   fetchIngredients,
   removeOrders,
   selectOrders
 } from '../../slices/stellar-burger-slice';
+import { TOrder } from '@utils-types';
 
-//Компонент Feed отвечает за отображение ленты заказов. Если заказы еще не загружены, отображается прелоадер.
+// Компонент Feed отображает список заказов или прелоадер при отсутствии данных.
 export const Feed: FC = () => {
-  /** TODO: взять переменную из стора */
-  const orders: TOrder[] = useSelector(selectOrders);
   const dispatch = useDispatch();
+  const orders: TOrder[] = useSelector(selectOrders);
 
   useEffect(() => {
-    Promise.all([dispatch(fetchIngredients()), dispatch(fetchFeed())]);
-  }, []);
+    const fetchData = async () => {
+      await Promise.all([dispatch(fetchIngredients()), dispatch(fetchFeed())]);
+    };
 
-  if (!orders.length) {
+    fetchData();
+  }, [dispatch]);
+
+  const handleRefresh = () => {
+    dispatch(fetchFeed());
+    dispatch(removeOrders());
+  };
+
+  if (orders.length === 0) {
     return <Preloader />;
   }
 
-  return (
-    <FeedUI
-      orders={orders}
-      handleGetFeeds={() => {
-        dispatch(fetchFeed());
-        dispatch(removeOrders());
-      }}
-    />
-  );
+  return <FeedUI orders={orders} handleGetFeeds={handleRefresh} />;
 };
