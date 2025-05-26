@@ -1,28 +1,30 @@
 import { FC, useEffect } from 'react';
-import { Preloader } from '../ui/preloader';
-import { IngredientDetailsUI } from '../ui/ingredient-details';
-import { useSelector } from '../../services/store';
-import { selectIngredients } from '../../slices/stellar-burger-slice';
 import { useNavigate, useParams } from 'react-router-dom';
 
-//React-компонент отображает детали ингредиента на основе его id, переданного в URL.
+import { IngredientDetailsUI } from '../ui/ingredient-details';
+import { Preloader } from '../ui/preloader';
+import { useSelector } from '../../services/store';
+import { selectIngredients } from '../../slices/stellar-burger-slice';
+
+// Компонент для отображения информации об ингредиенте по его ID из URL
 export const IngredientDetails: FC = () => {
-  const navigate = useNavigate();
-  const params = useParams<{ id: string }>(); // Хук для получения параметров из URL (в данном случае `id` ингредиента)
+  const { id: ingredientId } = useParams<{ id: string }>();
+  const navigateTo = useNavigate();
+
+  const ingredientList = useSelector(selectIngredients);
 
   useEffect(() => {
-    if (!params.id) {
-      navigate('/', { replace: true });
+    const noIdProvided = !ingredientId;
+    if (noIdProvided) {
+      navigateTo('/', { replace: true });
     }
-  }, []);
+  }, [ingredientId, navigateTo]);
 
-  /** TODO: взять переменную из стора */
-  const ingredients = useSelector(selectIngredients);
-  const ingredientData = ingredients.find((item) => item._id === params.id); // Находим данные ингредиента по его `id`
+  const foundItem = ingredientList.find(({ _id }) => _id === ingredientId);
 
-  if (!ingredientData) {
+  if (!foundItem) {
     return <Preloader />;
   }
 
-  return <IngredientDetailsUI ingredientData={ingredientData} />;
+  return <IngredientDetailsUI ingredientData={foundItem} />;
 };

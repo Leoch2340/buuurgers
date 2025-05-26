@@ -6,10 +6,5 @@ export type BurgerConstructorElementProps = {
   totalItems: number;
 };
 
-// export type BurgerConstructorElementProps = {
-//   ingredient: TConstructorIngredient & TIngredientUnique;
-//   index: number;
-//   totalItems: number;
-// };
 
 

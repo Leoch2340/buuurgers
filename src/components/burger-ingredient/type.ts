@@ -4,5 +4,4 @@ export type TBurgerIngredientProps = {
   ingredient: TIngredient;
   count: number;
   index: number;
-
 };

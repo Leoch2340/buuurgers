@@ -7,58 +7,50 @@ import { OrderCardUI } from '../ui/order-card';
 import { useSelector } from '../../services/store';
 import { selectIngredients } from '../../slices/stellar-burger-slice';
 
-const maxIngredients = 6; // Максимальное количество ингредиентов, которые будут отображаться на карточке заказа
+const INGREDIENT_DISPLAY_LIMIT = 6; // максимальное число ингредиентов для показа
 
-// Компонент OrderCard отображает карточку заказа
 export const OrderCard: FC<OrderCardProps> = memo(({ order }) => {
   const location = useLocation();
+  const fullIngredientList = useSelector(selectIngredients);
 
-  /** TODO: взять переменную из стора */
-  const ingredients: TIngredient[] = useSelector(selectIngredients);
+  const preparedData = useMemo(() => {
+    if (fullIngredientList.length === 0) return null;
 
-  // Используем useMemo для оптимизации вычислений информации о заказе
-  const orderInfo = useMemo(() => {
-    if (!ingredients.length) return null;
-    // Создаем массив информации об ингредиентах заказа
-    const ingredientsInfo = order.ingredients.reduce(
-      (acc: TIngredient[], item: string) => {
-        // Находим ингредиент по его _id
-        const ingredient = ingredients.find((ing) => ing._id === item);
-        // Если ингредиент найден, добавляем его в массив
-        if (ingredient) return [...acc, ingredient];
-        return acc;
+    const matchedIngredients = order.ingredients.reduce<TIngredient[]>(
+      (acc, id) => {
+        const found = fullIngredientList.find((el) => el._id === id);
+        return found ? [...acc, found] : acc;
       },
       []
     );
-    // Вычисляем общую стоимость заказа
-    const total = ingredientsInfo.reduce((acc, item) => acc + item.price, 0);
-    // Ограничиваем количество отображаемых ингредиентов
-    const ingredientsToShow = ingredientsInfo.slice(0, maxIngredients);
-    // Вычисляем количество оставшихся ингредиентов, которые не поместились на карточке
-    const remains =
-      ingredientsInfo.length > maxIngredients
-        ? ingredientsInfo.length - maxIngredients
-        : 0;
-    // Преобразуем дату создания заказа в объект Date
-    const date = new Date(order.createdAt);
-    // Возвращаем объект с информацией о заказе
-    return {
-      ...order, // Копируем все свойства заказа
-      ingredientsInfo, // Массив информации об ингредиентах
-      ingredientsToShow, // Ингредиенты для отображения
-      remains, // Количество оставшихся ингредиентов
-      total, // Общая стоимость заказа
-      date // Дата создания заказа
-    };
-  }, [order, ingredients]);
 
-  // Если информация о заказе не была вычислена, возвращаем null
-  if (!orderInfo) return null;
+    const priceSum = matchedIngredients.reduce(
+      (sum, item) => sum + item.price,
+      0
+    );
+
+    const displayed = matchedIngredients.slice(0, INGREDIENT_DISPLAY_LIMIT);
+    const hiddenCount =
+      matchedIngredients.length > INGREDIENT_DISPLAY_LIMIT
+        ? matchedIngredients.length - INGREDIENT_DISPLAY_LIMIT
+        : 0;
+
+    return {
+      ...order,
+      ingredientsInfo: matchedIngredients,
+      ingredientsToShow: displayed,
+      remains: hiddenCount,
+      total: priceSum,
+      date: new Date(order.createdAt)
+    };
+  }, [order, fullIngredientList]);
+
+  if (!preparedData) return null;
 
   return (
     <OrderCardUI
-      orderInfo={orderInfo}
-      maxIngredients={maxIngredients}
+      orderInfo={preparedData}
+      maxIngredients={INGREDIENT_DISPLAY_LIMIT}
       locationState={{ background: location }}
     />
   );

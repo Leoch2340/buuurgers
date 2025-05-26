@@ -13,7 +13,7 @@ import '../../index.css';
 import styles from './app.module.css';
 
 import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { ProtectedRoute } from '../protected-route';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from '../../services/store';
@@ -34,58 +34,57 @@ import { deleteCookie, getCookie } from '../../utils/cookie';
 export const App = () => {
   const dispatch = useDispatch();
   const location = useLocation();
-  const background = location.state && location.state.background;
-  const ingredients = useSelector(selectIngredients);
-  const isAuthenticated = useSelector(selectIsAuthenticated);
-  const token = getCookie('accessToken');
-  const feed = useSelector(selectOrders);
-  const isModalOpened = useSelector(selectIsModalOpened);
   const navigate = useNavigate();
 
-  // Инициализация приложения: проверка аутентификации и загрузка данных
+  const ingredients = useSelector(selectIngredients);
+  const isLoggedIn = useSelector(selectIsAuthenticated);
+  const feedOrders = useSelector(selectOrders);
+  const showModal = useSelector(selectIsModalOpened);
+  const token = getCookie('accessToken');
+
+  const modalBackground = location.state?.background;
+
+  // Проверка состояния авторизации и инициализация при необходимости
   useEffect(() => {
-    if (!isAuthenticated && token) {
+    if (!isLoggedIn && token) {
       dispatch(getUserThunk())
-        .then(() => {
-          dispatch(init());
-        })
-        .catch((e) => {
+        .then(() => dispatch(init()))
+        .catch(() => {
           deleteCookie('accessToken');
           localStorage.removeItem('refreshToken');
         });
-    } else if (!isAuthenticated) {
+    } else if (!isLoggedIn) {
       dispatch(init());
     }
-  }, [isAuthenticated, token, dispatch]);
+  }, [isLoggedIn, token, dispatch]);
 
-  //Загрузка ингредиентов, если они еще не загружены
+  // Подгружаем список ингредиентов, если он ещё не получен
   useEffect(() => {
-    if (!ingredients.length) {
-      dispatch(fetchIngredients()).catch((error) => {
-        console.error('Ошибка загрузки ингредиентов:', error);
-      });
+    if (ingredients.length === 0) {
+      dispatch(fetchIngredients()).catch((err) =>
+        console.error('Не удалось загрузить ингредиенты:', err)
+      );
     }
   }, [ingredients.length, dispatch]);
 
-  // // Загрузка ленты заказов, если она еще не загружена
+  // Загружаем ленту заказов, если она пустая
   useEffect(() => {
-    if (!feed.length) {
-      dispatch(fetchFeed()).catch((error) => {
-        console.error('Ошибка загрузки ленты заказов:', error);
-      });
+    if (feedOrders.length === 0) {
+      dispatch(fetchFeed()).catch((err) =>
+        console.error('Ошибка при получении заказов:', err)
+      );
     }
-  }, [feed.length, dispatch]);
+  }, [feedOrders.length, dispatch]);
 
-  // Обработка выхода пользователя
-  const handleLogout = async () => {
-    await dispatch(fetchLogout()); // Выполняем выход
-    navigate('/login'); // Редирект на страницу входа
+  const logoutHandler = async () => {
+    await dispatch(fetchLogout());
+    navigate('/login');
   };
 
   return (
     <div className={styles.app}>
       <AppHeader />
-      <Routes location={background || location}>
+      <Routes location={modalBackground || location}>
         <Route path='/' element={<ConstructorPage />} />
         <Route path='/feed' element={<Feed />} />
         <Route
@@ -136,8 +135,6 @@ export const App = () => {
             </ProtectedRoute>
           }
         />
-        <Route path='*' element={<NotFound404 />} />
-
         <Route path='/feed/:number' element={<OrderInfo />} />
         <Route path='/ingredients/:id' element={<IngredientDetails />} />
         <Route
@@ -148,16 +145,17 @@ export const App = () => {
             </ProtectedRoute>
           }
         />
+        <Route path='*' element={<NotFound404 />} />
       </Routes>
 
-      {/* Рендерим модальные окна, если есть background */}
-      {background && (
+      {/* Модальные окна при наличии фонового маршрута */}
+      {modalBackground && (
         <Routes>
           <Route
             path='/feed/:number'
             element={
               <Modal
-                title={'Заказ'}
+                title='Заказ'
                 onClose={() => {
                   dispatch(closeModal());
                   navigate(-1);
@@ -171,7 +169,7 @@ export const App = () => {
             path='/ingredients/:id'
             element={
               <Modal
-                title={'Детали ингредиента'}
+                title='Детали ингредиента'
                 onClose={() => {
                   dispatch(closeModal());
                   navigate(-1);
@@ -186,7 +184,7 @@ export const App = () => {
             element={
               <ProtectedRoute>
                 <Modal
-                  title={'Заказ'}
+                  title='Заказ'
                   onClose={() => {
                     dispatch(closeModal());
                     navigate(-1);

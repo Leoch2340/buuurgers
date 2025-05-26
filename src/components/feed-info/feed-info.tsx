@@ -9,29 +9,28 @@ import {
   selectTotalOrders
 } from '../../slices/stellar-burger-slice';
 
-//функция фильтрует заказы по статусу.  Возвращает первые 20 номеров заказов
-const getOrders = (orders: TOrder[], status: string): number[] =>
-  orders
-    .filter((item) => item.status === status)
-    .map((item) => item.number)
+// Возвращает первые 20 номеров заказов с указанным статусом
+const extractOrderNumbersByStatus = (
+  orderList: TOrder[],
+  targetStatus: string
+): number[] =>
+  orderList
+    .filter((order) => order.status === targetStatus)
+    .map((order) => order.number)
     .slice(0, 20);
 
-//Компонент FeedInfo отвечает за отображение информации о заказах (списки готовых и ожидающих заказов).
+// Компонент отображает информацию о заказах: готовые и ожидающие
 export const FeedInfo: FC = () => {
-  /** TODO: взять переменные из стора */
-  const orders: TOrder[] = useSelector(selectOrders); // список заказов
-  const total = useSelector(selectTotalOrders); //общее количество заказов
-  const totalToday = useSelector(selectTodayOrders); //количество заказов за сегодня
-  const feed = { total, totalToday }; //Объект, содержащий общую информацию о ленте заказов
-  //Фильтрация заказов
-  const readyOrders = getOrders(orders, 'done'); // Массив номеров заказов со статусом 'done' (готовые заказы).
-  const pendingOrders = getOrders(orders, 'pending'); //Массив номеров заказов со статусом 'pending' (ожидающие заказы).
+  const orderData = useSelector(selectOrders);
+  const totalCount = useSelector(selectTotalOrders);
+  const todayCount = useSelector(selectTodayOrders);
+
+  const summary = { total: totalCount, totalToday: todayCount };
+
+  const ready = extractOrderNumbersByStatus(orderData, 'done');
+  const pending = extractOrderNumbersByStatus(orderData, 'pending');
 
   return (
-    <FeedInfoUI
-      readyOrders={readyOrders}
-      pendingOrders={pendingOrders}
-      feed={feed}
-    />
+    <FeedInfoUI readyOrders={ready} pendingOrders={pending} feed={summary} />
   );
 };
