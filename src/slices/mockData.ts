@@ -1,59 +1,61 @@
 export const mockStore = {
   ingredients: [
     {
-      _id: '643d69a5c3f7b9001cfa093d',
+      _id: '6533e65a5c3f8b9321bfc0949',
+      name: 'Хрустящие минеральные кольца',
+      type: 'main',
+      proteins: 532,
+      fat: 4689,
+      carbohydrates: 609,
+      calories: 9,
+      price: 3,
+      image: 'https://code.s3.yandex.net/react/code/mineral_rings.png',
+      image_mobile:
+        'https://code.s3.yandex.net/react/code/mineral_rings-mobile.png',
+      image_large:
+        'https://code.s3.yandex.net/react/code/mineral_rings-large.png'
+    },
+    {
+      _id: '643d59a5c4f7m9001cfa093d',
       name: 'Флюоресцентная булка R2-D3',
       type: 'bun',
-      proteins: 44,
-      fat: 26,
-      carbohydrates: 85,
-      calories: 643,
-      price: 988,
+      proteins: 900,
+      fat: 34,
+      carbohydrates: 864,
+      calories: 63,
+      price: 234,
       image: 'https://code.s3.yandex.net/react/code/bun-01.png',
       image_mobile: 'https://code.s3.yandex.net/react/code/bun-01-mobile.png',
       image_large: 'https://code.s3.yandex.net/react/code/bun-01-large.png'
-    },
-    {
-      _id: '643d69a5c3f7b9001cfa0940',
-      name: 'Говяжий метеорит (отбивная)',
-      type: 'main',
-      proteins: 800,
-      fat: 800,
-      carbohydrates: 300,
-      calories: 2674,
-      price: 3000,
-      image: 'https://code.s3.yandex.net/react/code/meat-04.png',
-      image_mobile: 'https://code.s3.yandex.net/react/code/meat-04-mobile.png',
-      image_large: 'https://code.s3.yandex.net/react/code/meat-04-large.png'
     }
   ],
   loading: false,
   orderModalData: {
     ingredients: ['test-id1', 'test-id2'],
-    _id: '67f0dd26e8e61d001cec084f',
+    _id: '65у0dd27e8661d021f7c584f',
     status: 'done',
-    name: 'Флюоресцентный метеоритный бургер',
-    createdAt: '2025-04-05T07:35:02.385Z',
-    updatedAt: '2025-04-05T07:35:03.075Z',
-    number: 73501
+    name: 'Краторный бургер',
+    createdAt: '2025-05-09T08:33:05.543Z',
+    updatedAt: '2025-05-09T08:36:07.763Z',
+    number: 65437
   },
   constructorItems: {
     bun: {
       _id: '643d69a5c3f7b9001cfa093d',
-      name: 'Флюоресцентная булка R2-D3',
+      name: 'Краторная булка N-200i',
       type: 'bun',
-      proteins: 44,
-      fat: 26,
-      carbohydrates: 85,
-      calories: 643,
-      price: 988,
+      proteins: 33,
+      fat: 24,
+      carbohydrates: 55,
+      calories: 420,
+      price: 1255,
       image: 'https://code.s3.yandex.net/react/code/bun-01.png',
       image_mobile: 'https://code.s3.yandex.net/react/code/bun-01-mobile.png',
       image_large: 'https://code.s3.yandex.net/react/code/bun-01-large.png'
     },
     ingredients: [
       {
-        _id: '643d69a5c3f7b9001cfa0940',
+        _id: '653d66a5c3cb9501cba0944',
         name: 'Говяжий метеорит (отбивная)',
         type: 'main',
         proteins: 800,

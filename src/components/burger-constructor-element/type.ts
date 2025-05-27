@@ -5,6 +5,3 @@ export type BurgerConstructorElementProps = {
   index: number;
   totalItems: number;
 };
-
-
-
