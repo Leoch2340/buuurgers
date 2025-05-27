@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>53/53</span>
+                <span class='fraction'>54/54</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>53/53</span>
+                <span class='fraction'>54/54</span>
             </div>
         
             
@@ -115,7 +115,28 @@
 <a name='L50'></a><a href='#L50'>50</a>
 <a name='L51'></a><a href='#L51'>51</a>
 <a name='L52'></a><a href='#L52'>52</a>
-<a name='L53'></a><a href='#L53'>53</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">22x</span>
+<span class="cline-any cline-yes">22x</span>
+<span class="cline-any cline-yes">22x</span>
+<span class="cline-any cline-yes">22x</span>
+<span class="cline-any cline-yes">22x</span>
+<span class="cline-any cline-yes">22x</span>
+<span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -129,13 +150,6 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">44x</span>
-<span class="cline-any cline-yes">44x</span>
-<span class="cline-any cline-yes">44x</span>
-<span class="cline-any cline-yes">44x</span>
-<span class="cline-any cline-yes">44x</span>
-<span class="cline-any cline-yes">44x</span>
-<span class="cline-any cline-yes">44x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -150,60 +164,49 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">44x</span>
-<span class="cline-any cline-yes">44x</span>
-<span class="cline-any cline-yes">44x</span>
-<span class="cline-any cline-yes">44x</span>
-<span class="cline-any cline-yes">44x</span>
-<span class="cline-any cline-yes">44x</span>
-<span class="cline-any cline-yes">44x</span></td><td class="text"><pre class="prettyprint lang-js">// C:\Users\leoch\Desktop\Новая папка\stellar-burgers-main\src\utils\__tests__\test-utils.ts
-import { jest } from '@jest/globals';
+<span class="cline-any cline-yes">22x</span>
+<span class="cline-any cline-yes">22x</span>
+<span class="cline-any cline-yes">22x</span>
+<span class="cline-any cline-yes">22x</span>
+<span class="cline-any cline-yes">22x</span>
+<span class="cline-any cline-yes">22x</span>
+<span class="cline-any cline-yes">22x</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { jest } from '@jest/globals';
 &nbsp;
-// Сохраняем оригинальные реализации для восстановления после тестов
+// Сохраняем оригинальные реализации глобальных объектов для последующего восстановления
 export const originalFetch = global.fetch;
 export const originalDocument = global.document;
 export const originalLocalStorage = global.localStorage;
 &nbsp;
 /**
- * Вспомогательная функция для создания мокового ответа fetch
- * @param data - Данные для возврата в ответе
- * @param ok - Флаг успешности запроса (по умолчанию true)
- * @returns Промис с моковым ответом
+ * Создаёт мок-объект ответа для функции fetch
+ * @param data - Данные, возвращаемые в теле ответа
+ * @param ok - Флаг, определяющий успешность ответа (по умолчанию true)
+ * @returns Промис с объектом, имитирующим ответ fetch
  */
 export async function getMockResponse(data: any, ok: boolean = true) {
   return Promise.resolve({
-    ok, // Статус успешности запроса
-    json: () =&gt; Promise.resolve(data),
-    status: ok ? 200 : 400
+    ok, // Указывает на успешность ответа
+    json: () =&gt; Promise.resolve(data), // Метод json() возвращает переданные данные
+    status: ok ? 200 : 400 // HTTP-статус кода ответа
   });
 }
 &nbsp;
-// Моковые данные для успешного ответа
+// Пример данных для успешного запроса
 export const mockData = {
   success: true,
   data: 'test data',
   orders: ['test1', 'test2']
 };
 &nbsp;
-// Моковые данные для ошибки
+// Пример данных для симуляции ошибки
 export const mockError = {
   success: false,
   name: 'error',
   message: 'jwt expired'
 };
 &nbsp;
-// Моковые данные пользователя
+// Набор тестовых данных пользователя для различных сценариев
 export const mockUserData = {
   register: { name: 'name', email: 'test@mail.com', password: 'test' },
   login: { email: 'test@mail.com', password: 'test' },
@@ -212,21 +215,24 @@ export const mockUserData = {
   update: { name: 'test', email: 'test@mail.com' }
 };
 &nbsp;
-// Настройка моков перед тестами
+/**
+ * Подготавливает окружение, устанавливая моки для document.cookie и localStorage
+ */
 export function setupMocks() {
   global.document = { cookie: 'accessToken=test_val' } as any;
   global.localStorage = {
     getItem: jest.fn(() =&gt; 'testItem'),
     setItem: jest.fn()
   } as any;
-}</pre></td></tr></table></pre>
+}
+&nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-27T20:11:15.821Z
+                at 2025-05-27T21:38:27.410Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
